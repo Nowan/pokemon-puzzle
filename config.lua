@@ -7,6 +7,7 @@ application =
 		height = 1024, 
 		scale = "letterBox",
 		fps = 30,
+		yAlign="bottom"
 		
 		--[[
 		imageSuffix =
