@@ -5,9 +5,8 @@
 ]]--
 
 local current_path = debug.getinfo(1).source; -- path to current script
-local current_dir = string.match(current_path, "(.-)([^\\]-([^%.]+))$"); -- path to current directory (modules)
-
-package.path = package.path..current_dir.."\\?.lua" -- include all files in the modules folder in the path
+local current_dir = string.match(string.sub(current_path,2), "(.-)([^\\]-([^%.]+))$"); -- path to current directory (modules)
+package.path = package.path..";"..current_dir.."?.lua" -- include all modules to the path
 
 content = {};
 content.width = display.contentWidth;
