@@ -17,7 +17,7 @@ function CoinCounter:init()
 	coinImage.x = -42;
 	coinImage.y = 1;
 
-	local indicator = display.newText( CoinCounter, "0", 30, 3, "Arial", 40);
+	local indicator = display.newText( CoinCounter, "0", 30, 3, "Pocket Monk.otf", 50);
 	indicator:setTextColor( 1, 0, 0 );
 
 end

@@ -16,7 +16,7 @@ function PokeballCounter:init()
 	pokeballImage.x = 42;
 	pokeballImage.y = 1;
 
-	local indicator = display.newText( PokeballCounter, "0", -30, 3, "Arial", 40);
+	local indicator = display.newText( PokeballCounter, "0", -30, 3, "Pocket Monk.otf", 50);
 	indicator:setTextColor( 1, 0, 0 );
 
 end
