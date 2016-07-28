@@ -36,6 +36,12 @@ function Gameboard:show()
 		CoinCounter.x = 92;
 		CoinCounter.y = panel.y - 82;
 	end
+
+	if(PokeballCounter) then
+		PokeballCounter:init();
+		PokeballCounter.x = content.width-92;
+		PokeballCounter.y = panel.y - 82;
+	end
 end
 
 function Gameboard:hide()
