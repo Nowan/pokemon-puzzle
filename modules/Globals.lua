@@ -1,6 +1,6 @@
 --[[
 
-	Stores global values 
+	Stores global values
 
 ]]--
 

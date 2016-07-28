@@ -2,5 +2,8 @@
 
 ]]--
 
-require "modules.Globals";
+require("modules.Globals");
 
+require("Gameboard");
+
+Gameboard:show();
