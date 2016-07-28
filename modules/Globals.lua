@@ -13,4 +13,8 @@ content.width = display.contentWidth;
 content.height = display.contentHeight;
 content.centerX = display.contentCenterX;
 content.centerY = display.contentCenterY;
-content.screenHeight = display.pixelWidth*(content.width/display.pixelHeight);
+content.screenHeight = display.pixelHeight*(content.width/display.pixelWidth);
+content.upperEdge = content.height - content.screenHeight;
+content.lowerEdge = content.height;
+
+TEXTURES_DIR = "/textures/"
