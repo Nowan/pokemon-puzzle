@@ -30,6 +30,12 @@ function Gameboard:show()
 	local logo = display.newImage( Gameboard, TEXTURES_DIR.."logo.png" );
 	logo.x = content.centerX-10;
 	logo.y = -130
+
+	if(CoinCounter) then 
+		CoinCounter:init();
+		CoinCounter.x = 92;
+		CoinCounter.y = panel.y - 82;
+	end
 end
 
 function Gameboard:hide()
