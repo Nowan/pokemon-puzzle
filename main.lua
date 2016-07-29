@@ -13,3 +13,15 @@ Gameboard:show();
 Puzzle:init(6);
 
 Puzzle:fill();
+
+Puzzle.pokemonPressed = function(pokemon)
+	
+end
+
+Puzzle.pokemonMoved = function(pokemon)
+
+end
+
+Puzzle.pokemonReleased = function(pokemon)
+
+end

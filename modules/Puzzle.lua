@@ -18,11 +18,16 @@ function Puzzle:init(size)
 		return;
 	end;
 
-	Puzzle.size = math.floor(size);
-	Puzzle.tileSize = content.width / Puzzle.size;
+	-- pre-declarations
+	Puzzle.tile = {}; -- endpoint for tile listener functions (drag & drop)
+	Puzzle.tile.onPress = nil; -- initialized in main.lua by student
+	Puzzle.tile.onRelease = nil; -- initialized in main.lua by student
 
-	-- declare tiles matrix
-	Puzzle.tiles = {};
+	-- constants & declarations
+	Puzzle.size = math.floor(size); -- grid size (number of rows/columns)
+	Puzzle.tileSize = content.width / Puzzle.size; -- tile size (pixels)
+
+	Puzzle.tiles = {}; -- tiles matrix
 	for r=1,Puzzle.size do 
 		Puzzle.tiles[r] = {} 
 	end
@@ -48,6 +53,23 @@ function Puzzle:fill()
 				local pokemon = m_Pokemon.random();
 				pokemon.x = (c-1)*Puzzle.tileSize;
 				pokemon.y = (r-1)*Puzzle.tileSize;
+
+				-- add listeners
+				pokemon:addEventListener( "touch", function(event) 
+					if(event.phase=="began") then
+						if(Puzzle.pokemonPressed) then 
+							Puzzle.pokemonPressed(pokemon); 
+						end
+					elseif(event.phase=="moved") then
+						if(Puzzle.pokemonMoved) then 
+							Puzzle.pokemonMoved(pokemon); 
+						end
+					elseif(event.phase=="ended" or event.phase=="cancelled") then
+						if(Puzzle.pokemonReleased) then
+							Puzzle.pokemonReleased(pokemon);
+						end
+					end
+				end );
 
 				Puzzle:insert( pokemon );
 				Puzzle.tiles[r][c] = pokemon;

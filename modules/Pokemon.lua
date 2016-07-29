@@ -25,3 +25,4 @@ function random()
 	local Pokemon = new(pokebase[randomIndex]);
 	return Pokemon;
 end
+
