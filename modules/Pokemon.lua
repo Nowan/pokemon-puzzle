@@ -18,10 +18,14 @@ function new(pokemonData)
 	preview.height = Puzzle.tileSize * 0.9;
 
 	-- methods
+	local shakeAnimation;
 	function Pokemon:shake()
-		transition.to(Pokemon,{time=50, rotation=5, onComplete = function() 
-			transition.to(Pokemon,{time=100, rotation=-5, onComplete = function() 
-				transition.to(Pokemon,{time=50, rotation=0, onComplete });
+		if shakeAnimation then return end;
+		shakeAnimation = transition.to(Pokemon,{time=50, rotation=5, onComplete = function() 
+			shakeAnimation = transition.to(Pokemon,{time=100, rotation=-5, onComplete = function() 
+				shakeAnimation = transition.to(Pokemon,{time=50, rotation=0, onComplete = function() 
+						shakeAnimation = nil;
+					end });
 			end });
 		end });
 	end

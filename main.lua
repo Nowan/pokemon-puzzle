@@ -14,14 +14,18 @@ Puzzle:init(6);
 
 Puzzle:fill();
 
-Puzzle.pokemonPressed = function(pokemon)
-	pokemon:shake();
+Puzzle.onPokemonPressed = function(pressedPokemon)
+	pressedPokemon:shake();
 end
 
-Puzzle.pokemonMoved = function(pokemon)
-
+Puzzle.onPokemonDragged = function(draggedPokemon, overlappingPokemon)
+	if draggedPokemon.columnIndex ~= overlappingPokemon.columnIndex or 
+	   draggedPokemon.rowIndex ~= overlappingPokemon.rowIndex then
+		print(overlappingPokemon.data.name);
+		overlappingPokemon:shake();
+	end
 end
 
-Puzzle.pokemonReleased = function(pokemon)
+Puzzle.onPokemonReleased = function(releasedPokemon)
 
 end

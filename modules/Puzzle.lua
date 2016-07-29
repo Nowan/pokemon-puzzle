@@ -18,12 +18,7 @@ function Puzzle:init(size)
 		return;
 	end;
 
-	-- pre-declarations
-	Puzzle.tile = {}; -- endpoint for tile listener functions (drag & drop)
-	Puzzle.tile.onPress = nil; -- initialized in main.lua by student
-	Puzzle.tile.onRelease = nil; -- initialized in main.lua by student
-
-	-- constants & declarations
+	-- constants
 	Puzzle.size = math.floor(size); -- grid size (number of rows/columns)
 	Puzzle.tileSize = content.width / Puzzle.size; -- tile size (pixels)
 
@@ -44,6 +39,16 @@ function Puzzle:init(size)
 	Puzzle.y = content.lowerEdge - Puzzle.height + Puzzle.tileSize/2;
 end
 
+local function getOverlappingPokemon(point)
+	local columnIndex = math.ceil(point.x/Puzzle.tileSize);
+	if(columnIndex>Puzzle.size or columnIndex<1) then return nil end
+
+	local rowIndex = math.ceil((point.y-Puzzle.y+Puzzle.tileSize/2)/Puzzle.tileSize);
+	if(rowIndex>Puzzle.size or rowIndex<1) then return nil end
+	
+	return Puzzle.tiles[rowIndex][columnIndex];
+end
+
 function Puzzle:fill()
 	-- generate tiles and store them in the Puzzle.tiles array
 	for r=1,Puzzle.size do
@@ -54,20 +59,27 @@ function Puzzle:fill()
 				pokemon.x = (c-1)*Puzzle.tileSize;
 				pokemon.y = (r-1)*Puzzle.tileSize;
 
+				pokemon.columnIndex = c;
+				pokemon.rowIndex = r;
+
 				-- add listeners
 				pokemon:addEventListener( "touch", function(event) 
 					if(event.phase=="began") then
-						if(Puzzle.pokemonPressed) then 
-							Puzzle.pokemonPressed(pokemon); 
+						if(Puzzle.onPokemonPressed) then 
+							Puzzle.onPokemonPressed(pokemon); 
 						end
+						display.currentStage:setFocus( pokemon );
 					elseif(event.phase=="moved") then
-						if(Puzzle.pokemonMoved) then 
-							Puzzle.pokemonMoved(pokemon); 
+						if(Puzzle.onPokemonDragged) then 
+							local overlappingPokemon = getOverlappingPokemon(event);
+							if not overlappingPokemon then overlappingPokemon=pokemon end;
+							Puzzle.onPokemonDragged(pokemon, overlappingPokemon); 
 						end
 					elseif(event.phase=="ended" or event.phase=="cancelled") then
-						if(Puzzle.pokemonReleased) then
-							Puzzle.pokemonReleased(pokemon);
+						if(Puzzle.onPokemonReleased) then
+							Puzzle.onPokemonReleased(pokemon);
 						end
+						display.currentStage:setFocus( nil );
 					end
 				end );
 
