@@ -12,3 +12,5 @@ require("Puzzle");
 Gameboard:show();
 
 Puzzle:init(6);
+
+Puzzle:fill();

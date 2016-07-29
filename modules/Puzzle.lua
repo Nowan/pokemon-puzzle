@@ -1,8 +1,8 @@
 --[[
-	
-	
 
 ]]--
+local m_Pokemon = require("Pokemon");
+
 Puzzle = display.newGroup();
 
 function Puzzle:init(size)
@@ -31,4 +31,8 @@ function Puzzle:init(size)
 
 	Puzzle.x = Puzzle.tileSize/2;
 	Puzzle.y = content.lowerEdge - Puzzle.height + Puzzle.tileSize/2;
+end
+
+function Puzzle:fill()
+	m_Pokemon.new(pokebase.bulbasaur);
 end
