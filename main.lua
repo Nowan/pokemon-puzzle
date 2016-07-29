@@ -15,7 +15,7 @@ Puzzle:init(6);
 Puzzle:fill();
 
 Puzzle.pokemonPressed = function(pokemon)
-	
+	pokemon:shake();
 end
 
 Puzzle.pokemonMoved = function(pokemon)
