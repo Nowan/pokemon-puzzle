@@ -1,0 +1,44 @@
+[
+  {
+    "name": "bulbasaur",
+    "type": [ "grass", "poison" ],
+    "evolution": "ivysaur"
+  },
+  {
+    "name": "ivysaur",
+    "type": [ "grass", "poison" ],
+    "evolution": "venusaur"
+  },
+  {
+    "name": "venusaur",
+    "type": [ "grass", "poison" ]
+  },
+  {
+    "name": "charmander",
+    "type": [ "fire" ],
+    "evolution": "charmeleon"
+  },
+  {
+    "name": "charmeleon",
+    "type": [ "fire" ],
+    "evolution": "charizard"
+  },
+  {
+    "name": "charizard",
+    "type": [ "fire", "flying" ]
+  },
+  {
+    "name": "squirtle",
+    "type": [ "water" ],
+    "evolution": "wartortle"
+  },
+  {
+    "name": "wartortle",
+    "type": [ "water" ],
+    "evolution": "blastoise"
+  },
+  {
+    "name": "blastoise",
+    "type": [ "water" ]
+  }
+]

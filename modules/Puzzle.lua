@@ -31,5 +31,4 @@ function Puzzle:init(size)
 
 	Puzzle.x = Puzzle.tileSize/2;
 	Puzzle.y = content.lowerEdge - Puzzle.height + Puzzle.tileSize/2;
-
 end
