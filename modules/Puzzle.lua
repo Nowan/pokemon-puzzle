@@ -21,6 +21,12 @@ function Puzzle:init(size)
 	Puzzle.size = math.floor(size);
 	Puzzle.tileSize = content.width / Puzzle.size;
 
+	-- declare tiles matrix
+	Puzzle.tiles = {};
+	for r=1,Puzzle.size do 
+		Puzzle.tiles[r] = {} 
+	end
+
 	for i=1,Puzzle.size^2 do
 		local emptyTile = display.newImage(Puzzle, TEXTURES_DIR.."tile-empty.png");
 		emptyTile.width = Puzzle.tileSize;
@@ -34,5 +40,18 @@ function Puzzle:init(size)
 end
 
 function Puzzle:fill()
-	m_Pokemon.new(pokebase.bulbasaur);
+	-- generate tiles and store them in the Puzzle.tiles array
+	for r=1,Puzzle.size do
+		for c=1,Puzzle.size do
+			-- fill only empty tiles
+			if Puzzle.tiles[r][c] == nil then
+				local pokemon = m_Pokemon.new(pokebase.bulbasaur);
+				pokemon.x = (c-1)*Puzzle.tileSize;
+				pokemon.y = (r-1)*Puzzle.tileSize;
+
+				Puzzle:insert( pokemon );
+				Puzzle.tiles[r][c] = pokemon;
+			end
+		end
+	end
 end
