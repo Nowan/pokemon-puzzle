@@ -6,9 +6,7 @@
 
 local json = require "json"; -- module for parsing json text
 
-local current_path = debug.getinfo(1).source; -- path to current script
-local current_dir = string.match(string.sub(current_path,2), "(.-)([^\\]-([^%.]+))$"); -- path to current directory (modules)
-package.path = package.path..";"..current_dir.."?.lua" -- include all modules to the path
+--package.path = package.path..";/modules/?.lua" -- include all modules to the path
 
 content = {};
 content.width = display.contentWidth;
@@ -19,9 +17,10 @@ content.screenHeight = display.pixelHeight*(content.width/display.pixelWidth);
 content.upperEdge = content.height - content.screenHeight;
 content.lowerEdge = content.height;
 
-TEXTURES_DIR = "/textures/"
-POKEMON_PICTURES_DIR = "/textures/pokemon/"
-POKEMON_DATA_PATH = system.pathForFile( "/data/pokemon.json", system.ResourceDirectory );
+TEXTURES_DIR = "textures/"
+POKEMON_PICTURES_DIR = "textures/pokemon/"
+POKEMON_DATA_PATH = system.pathForFile( "data/pokemon.json" );
+print(POKEMON_DATA_PATH);
 
 pokebase = json.decode( io.open( POKEMON_DATA_PATH, "r" ):read( "*a" ) );
 

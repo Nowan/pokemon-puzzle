@@ -21,5 +21,7 @@ function new(pokemonData)
 end
 
 function random()
-
+	local randomIndex = math.random(1,#pokebase);
+	local Pokemon = new(pokebase[randomIndex]);
+	return Pokemon;
 end

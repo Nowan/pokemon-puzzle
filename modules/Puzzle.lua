@@ -1,7 +1,7 @@
 --[[
 
 ]]--
-local m_Pokemon = require("Pokemon");
+local m_Pokemon = require("modules.Pokemon");
 
 Puzzle = display.newGroup();
 
@@ -45,7 +45,7 @@ function Puzzle:fill()
 		for c=1,Puzzle.size do
 			-- fill only empty tiles
 			if Puzzle.tiles[r][c] == nil then
-				local pokemon = m_Pokemon.new(pokebase.bulbasaur);
+				local pokemon = m_Pokemon.random();
 				pokemon.x = (c-1)*Puzzle.tileSize;
 				pokemon.y = (r-1)*Puzzle.tileSize;
 

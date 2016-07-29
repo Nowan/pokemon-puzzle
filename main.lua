@@ -3,11 +3,10 @@
 ]]--
 
 require("modules.Globals");
-
-require("Gameboard");
-require("CoinCounter");
-require("PokeballCounter");
-require("Puzzle");
+require("modules.Gameboard");
+require("modules.CoinCounter");
+require("modules.PokeballCounter");
+require("modules.Puzzle");
 
 Gameboard:show();
 
