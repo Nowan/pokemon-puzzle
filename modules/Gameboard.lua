@@ -35,12 +35,19 @@ function Gameboard:show()
 		CoinCounter:init();
 		CoinCounter.x = 92;
 		CoinCounter.y = panel.y - 82;
+		Gameboard:insert( CoinCounter );
 	end
 
 	if(PokeballCounter) then
 		PokeballCounter:init();
 		PokeballCounter.x = content.width-92;
 		PokeballCounter.y = panel.y - 82;
+		Gameboard:insert( PokeballCounter );
+	end
+
+	if(Puzzle) then
+		Gameboard:insert(Puzzle);
+		panelShadow:toFront( );
 	end
 end
 
