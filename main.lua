@@ -7,6 +7,7 @@ require("modules.Gameboard");
 require("modules.CoinCounter");
 require("modules.PokeballCounter");
 require("modules.Puzzle");
+require("modules.Audio");
 
 Gameboard:show();
 
