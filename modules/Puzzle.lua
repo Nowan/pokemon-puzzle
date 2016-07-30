@@ -90,9 +90,8 @@ function Puzzle:fill()
 	end
 end
 
-local swapTransition;
 function Puzzle:swap(firstPokemon,secondPokemon)
-	if swapTransition then return end;
+	if Puzzle.swapTransition then return end;
 	local targetC = secondPokemon.column;
 	local targetR = secondPokemon.row;
 	firstPokemon:toFront( );
@@ -106,9 +105,9 @@ function Puzzle:swap(firstPokemon,secondPokemon)
 	Puzzle.tiles[firstPokemon.row][firstPokemon.column] = firstPokemon;
 
 	transition.to(firstPokemon,{time=500, x=secondPokemon.x, y=secondPokemon.y, easing=easing.inOutQuint  });
-	swapTransition = transition.to(secondPokemon,{time=500, x=firstPokemon.x, y=firstPokemon.y, easing=easing.inOutQuint , onComplete=function()
-		transition.cancel( swapTransition );
-		swapTransition = nil;
+	Puzzle.swapTransition = transition.to(secondPokemon,{time=500, x=firstPokemon.x, y=firstPokemon.y, easing=easing.inOutQuint , onComplete=function()
+		transition.cancel( Puzzle.swapTransition );
+		Puzzle.swapTransition = nil;
 	end});
 end
 
@@ -116,15 +115,13 @@ local function evolve(pokemonLine)
 	if(pokemonLine.orientation=="horizontal") then
 		for i=0,pokemonLine.length-1 do
 			if Puzzle.tiles[pokemonLine.row][pokemonLine.column+i] then
-				Puzzle.tiles[pokemonLine.row][pokemonLine.column+i]:removeSelf( );
-				Puzzle.tiles[pokemonLine.row][pokemonLine.column+i] = nil;
+				Puzzle.tiles[pokemonLine.row][pokemonLine.column+i]:disappear();
 			end
 		end
 	elseif(pokemonLine.orientation=="vertical") then
 		for i=0,pokemonLine.length-1 do
 			if Puzzle.tiles[pokemonLine.row+i][pokemonLine.column] then
-				Puzzle.tiles[pokemonLine.row+i][pokemonLine.column]:removeSelf( );
-				Puzzle.tiles[pokemonLine.row+i][pokemonLine.column] = nil;
+				Puzzle.tiles[pokemonLine.row+i][pokemonLine.column]:disappear();
 			end
 		end
 	end

@@ -29,6 +29,25 @@ function new(pokemonData)
 		end });
 	end
 
+	function Pokemon:disappear()
+		local function dissapearingAnimation() 
+			transition.to(Pokemon, {time=500,width=0,height=0,Easing=easing.inCubic ,onComplete=function()
+				if Pokemon then
+					Puzzle.tiles[Pokemon.row][Pokemon.column]:removeSelf( );
+					Puzzle.tiles[Pokemon.row][Pokemon.column] = nil;
+					Pokemon:removeSelf( );
+					Pokemon = nil;
+				end
+			end });
+		end
+
+		if(Puzzle.swapTransition) then
+			timer.performWithDelay( 400, function() dissapearingAnimation(); end, 1 )
+		else
+			dissapearingAnimation();
+		end
+	end
+
 	return Pokemon;
 end
 
