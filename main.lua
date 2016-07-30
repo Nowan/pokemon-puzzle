@@ -34,6 +34,7 @@ Puzzle:fill();
 
 Puzzle.onPokemonPressed = function(pressedPokemon)
 	pressedPokemon:shake();
+	pressedPokemon:enspell();
 	originalRow = pressedPokemon.row;
 	originalColumn = pressedPokemon.column;
 end
@@ -51,3 +52,5 @@ end
 Puzzle.onPokemonReleased = function(releasedPokemon)
 	checkEvolutions();
 end
+
+Audio:playBackgroundMusic();

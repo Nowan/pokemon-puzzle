@@ -3,10 +3,16 @@
 ]]--
 module(...,package.seeall);
 
+local m_Emitter = require("modules.Emitter");
+
 function new(pokemonData)
 	local Pokemon = display.newGroup( );
 
 	Pokemon.data = pokemonData;
+
+	local emitter = m_Emitter.new(pokemonData.type[1]);
+	emitter.absolutePosition = true;
+	Pokemon:insert(emitter);
 
 	local tile = display.newImage(Pokemon, TEXTURES_DIR.."tile-"..pokemonData.type[1]..".png" );
 	tile.width = Puzzle.tileSize;
@@ -27,6 +33,10 @@ function new(pokemonData)
 					end });
 			end });
 		end });
+	end
+
+	function Pokemon:enspell()
+		emitter:start();
 	end
 
 	function Pokemon:disappear()
