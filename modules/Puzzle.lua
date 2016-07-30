@@ -46,6 +46,8 @@ local function getOverlappingPokemon(point)
 	local rowIndex = math.ceil((point.y-Puzzle.y+Puzzle.tileSize/2)/Puzzle.tileSize);
 	if(rowIndex>Puzzle.size or rowIndex<1) then return nil end
 	
+	print(rowIndex,columnIndex);
+
 	return Puzzle.tiles[rowIndex][columnIndex];
 end
 
@@ -88,4 +90,26 @@ function Puzzle:fill()
 			end
 		end
 	end
+end
+
+local swapTransition;
+function Puzzle:swap(firstPokemon,secondPokemon)
+	if swapTransition then return end;
+	local targetC = secondPokemon.columnIndex;
+	local targetR = secondPokemon.rowIndex;
+	firstPokemon:toFront( );
+
+	transition.to(firstPokemon,{time=500, x=secondPokemon.x, y=secondPokemon.y, easing=easing.inOutQuint  });
+	swapTransition = transition.to(secondPokemon,{time=500, x=firstPokemon.x, y=firstPokemon.y, easing=easing.inOutQuint , onComplete=function()
+		secondPokemon.columnIndex = firstPokemon.columnIndex;
+		secondPokemon.rowIndex = firstPokemon.rowIndex;
+		firstPokemon.columnIndex = targetC;
+		firstPokemon.rowIndex = targetR;
+
+		Puzzle.tiles[secondPokemon.rowIndex][secondPokemon.columnIndex] = secondPokemon;
+		Puzzle.tiles[firstPokemon.rowIndex][firstPokemon.columnIndex] = firstPokemon;
+
+		transition.cancel( swapTransition );
+		swapTransition = nil;
+	end});
 end

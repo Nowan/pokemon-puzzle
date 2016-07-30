@@ -21,8 +21,7 @@ end
 Puzzle.onPokemonDragged = function(draggedPokemon, overlappingPokemon)
 	if draggedPokemon.columnIndex ~= overlappingPokemon.columnIndex or 
 	   draggedPokemon.rowIndex ~= overlappingPokemon.rowIndex then
-		print(overlappingPokemon.data.name);
-		overlappingPokemon:shake();
+		Puzzle:swap(draggedPokemon,overlappingPokemon);
 	end
 end
 

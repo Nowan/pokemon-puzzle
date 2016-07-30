@@ -6,7 +6,6 @@ module(...,package.seeall);
 function new(pokemonData)
 	local Pokemon = display.newGroup( );
 
-	print(pokemonData.name)
 	Pokemon.data = pokemonData;
 
 	local tile = display.newImage(Pokemon, TEXTURES_DIR.."tile-"..pokemonData.type[1]..".png" );
