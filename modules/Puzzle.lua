@@ -202,14 +202,14 @@ function Puzzle:getPokemonInLine(lengthFilter)
 	local horizontalLines = {};
 	local verticalLines = {};
 
-	local function newPokemonLine(row, column, orientation, length)
+	local function newPokemonLine(row, column, orientation, length, evolutionStage, canEvolve)
 		local pokemonLine = {};
 		pokemonLine.row = row;
 		pokemonLine.column = column;
 		pokemonLine.orientation = orientation;
 		pokemonLine.length = length;
-		pokemonLine.middleRow = row+math.ceil(length/2);
-		pokemonLine.middleColumn = column+math.ceil(length/2);
+		pokemonLine.evolutionStage = evolutionStage;
+		pokemonLine.canEvolve = canEvolve;
 
 		function pokemonLine:evolve()
 			evolve(pokemonLine);
@@ -247,11 +247,11 @@ function Puzzle:getPokemonInLine(lengthFilter)
 									-- check, if current pokemon is in the line of the previous one
 								else
 									-- if not - insert new line
-									horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length);
+									horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length, currentPokemon.data.stage, currentPokemon.data.evolution~=nil);
 								end
 							else
 								-- if there is no lines in the array - insert current one
-								horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length);
+								horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length,currentPokemon.data.stage, currentPokemon.data.evolution~=nil);
 							end
 						end
 						
@@ -278,11 +278,11 @@ function Puzzle:getPokemonInLine(lengthFilter)
 									-- check, if current pokemon is in the line of the previous one
 								else
 									-- if not - insert new line
-									verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length);
+									verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length,currentPokemon.data.stage, currentPokemon.data.evolution~=nil);
 								end
 							else
 								-- if there are no lines in the array - insert the first one
-								verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length);
+								verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length,currentPokemon.data.stage, currentPokemon.data.evolution~=nil);
 							end
 						end
 						

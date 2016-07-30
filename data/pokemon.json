@@ -2,43 +2,52 @@
   {
     "name": "bulbasaur",
     "type": [ "grass", "poison" ],
-    "evolution": "ivysaur"
+    "evolution": "ivysaur",
+    "stage": 1
   },
   {
     "name": "ivysaur",
     "type": [ "grass", "poison" ],
-    "evolution": "venusaur"
+    "evolution": "venusaur",
+    "stage": 2
   },
   {
     "name": "venusaur",
-    "type": [ "grass", "poison" ]
+    "type": [ "grass", "poison" ],
+    "stage": 3
   },
   {
     "name": "charmander",
     "type": [ "fire" ],
-    "evolution": "charmeleon"
+    "evolution": "charmeleon",
+    "stage": 1
   },
   {
     "name": "charmeleon",
     "type": [ "fire" ],
-    "evolution": "charizard"
+    "evolution": "charizard",
+    "stage": 2
   },
   {
     "name": "charizard",
-    "type": [ "fire", "flying" ]
+    "type": [ "fire", "flying" ],
+    "stage": 3
   },
   {
     "name": "squirtle",
     "type": [ "water" ],
-    "evolution": "wartortle"
+    "evolution": "wartortle",
+    "stage": 1
   },
   {
     "name": "wartortle",
     "type": [ "water" ],
-    "evolution": "blastoise"
+    "evolution": "blastoise",
+    "stage": 2
   },
   {
     "name": "blastoise",
-    "type": [ "water" ]
+    "type": [ "water" ],
+    "stage": 3
   }
 ]

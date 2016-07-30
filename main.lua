@@ -12,18 +12,24 @@ Gameboard:show();
 
 Puzzle:init(6);
 
+PokeballCounter:setValue(50);
+
 local function checkEvolutions()
 	local pokemonInLine = Puzzle:getPokemonInLine(3);
 
 	for i=1,#pokemonInLine do
-		local pokemonLine = pokemonInLine[i];
-		print(pokemonLine.row,pokemonLine.column,pokemonLine.length,pokemonLine.orientation)
-		pokemonLine:evolve();
+		local pokemonSet = pokemonInLine[i];
+		pokemonSet:evolve();
+
+		CoinCounter:increase(pokemonSet.length*5*pokemonSet.evolutionStage);
+
+		if not pokemonSet.canEvolve then
+			PokeballCounter:decrease(1);
+		end
 	end
 end
 
 Puzzle:fill();
-checkEvolutions();
 
 Puzzle.onPokemonPressed = function(pressedPokemon)
 	pressedPokemon:shake();

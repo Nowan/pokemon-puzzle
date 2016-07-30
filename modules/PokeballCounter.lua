@@ -4,6 +4,8 @@
 
 PokeballCounter = display.newGroup( );
 
+PokeballCounter.value = 0;
+
 function PokeballCounter:init()
 	local containerImage = display.newImage( PokeballCounter, TEXTURES_DIR.."counter-container.png" );
 
@@ -16,7 +18,22 @@ function PokeballCounter:init()
 	pokeballImage.x = 42;
 	pokeballImage.y = 1;
 
-	local indicator = display.newText( PokeballCounter, "0", -30, 3, "Pocket Monk.otf", 50);
-	indicator:setTextColor( 1, 0, 0 );
+	PokeballCounter.indicator = display.newText( PokeballCounter, PokeballCounter.value, -30, 3, "Pocket Monk.otf", 50);
+	PokeballCounter.indicator:setTextColor( 1, 0, 0 );
 
+end
+
+function PokeballCounter:setValue(value)
+	PokeballCounter.value  = value;
+	PokeballCounter.indicator.text = PokeballCounter.value;
+end
+
+function PokeballCounter:increase(value)
+	PokeballCounter.value  = PokeballCounter.value+value;
+	PokeballCounter.indicator.text = PokeballCounter.value;
+end
+
+function PokeballCounter:decrease(value)
+	PokeballCounter.value  = PokeballCounter.value-value;
+	PokeballCounter.indicator.text = PokeballCounter.value;
 end
