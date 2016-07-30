@@ -112,6 +112,24 @@ function Puzzle:swap(firstPokemon,secondPokemon)
 	end});
 end
 
+local function evolve(pokemonLine)
+	if(pokemonLine.orientation=="horizontal") then
+		for i=0,pokemonLine.length-1 do
+			if Puzzle.tiles[pokemonLine.row][pokemonLine.column+i] then
+				Puzzle.tiles[pokemonLine.row][pokemonLine.column+i]:removeSelf( );
+				Puzzle.tiles[pokemonLine.row][pokemonLine.column+i] = nil;
+			end
+		end
+	elseif(pokemonLine.orientation=="vertical") then
+		for i=0,pokemonLine.length-1 do
+			if Puzzle.tiles[pokemonLine.row+i][pokemonLine.column] then
+				Puzzle.tiles[pokemonLine.row+i][pokemonLine.column]:removeSelf( );
+				Puzzle.tiles[pokemonLine.row+i][pokemonLine.column] = nil;
+			end
+		end
+	end
+end
+
 function Puzzle:getPokemonInLine(lengthFilter)	
 	if not lengthFilter then lengthFilter=2 end;
 
@@ -125,6 +143,10 @@ function Puzzle:getPokemonInLine(lengthFilter)
 		pokemonLine.orientation = orientation;
 		pokemonLine.length = length;
 
+		function pokemonLine:evolve()
+			evolve(pokemonLine);
+		end
+
 		return pokemonLine;
 	end
 
@@ -133,71 +155,74 @@ function Puzzle:getPokemonInLine(lengthFilter)
 
 			local length = 1;
 			local currentPokemon = Puzzle.tiles[r][c];
-			local examinedPokemon;
 
-			-- Step 1: check, if there are any similar pokemon on the right of the current one
-			if c<Puzzle.size then -- skip last column
-				examinedPokemon = Puzzle.tiles[r][c+length];
-				loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
+			if currentPokemon then
 
-				while loopContinues do
-					length = length + 1;
+				local examinedPokemon;
+
+				-- Step 1: check, if there are any similar pokemon on the right of the current one
+				if c<Puzzle.size then -- skip last column
 					examinedPokemon = Puzzle.tiles[r][c+length];
 					loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
-				
-					if not loopContinues then 
-						-- when loop doesn't continue - line length is correct
-						local previousPL = horizontalLines[#horizontalLines];
 
-						if(previousPL) then
-							if(currentPokemon.row==previousPL.row and currentPokemon.column>=previousPL.column and currentPokemon.column<previousPL.column+previousPL.length) then
-								-- check, if current pokemon is in the line of the previous one
+					while loopContinues do
+						length = length + 1;
+						examinedPokemon = Puzzle.tiles[r][c+length];
+						loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
+					
+						if not loopContinues then 
+							-- when loop doesn't continue - line length is correct
+							local previousPL = horizontalLines[#horizontalLines];
+
+							if(previousPL) then
+								if(currentPokemon.row==previousPL.row and currentPokemon.column>=previousPL.column and currentPokemon.column<previousPL.column+previousPL.length) then
+									-- check, if current pokemon is in the line of the previous one
+								else
+									-- if not - insert new line
+									horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length);
+								end
 							else
-								-- if not - insert new line
+								-- if there is no lines in the array - insert current one
+								print("New line "..r..";"..c);
 								horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length);
 							end
-						else
-							-- if there is no lines in the array - insert current one
-							print("New line "..r..";"..c);
-							horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length);
 						end
-					end
-					
-			    end
-			    length = 1;
-			end
+						
+				    end
+				    length = 1;
+				end
 
-			-- Step 2: check, if there are any similar pokemon below the current one
-			if r<Puzzle.size then -- skip last row
-				examinedPokemon = Puzzle.tiles[r+length][c];
-				loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
-
-				while loopContinues do
-					length = length + 1;
-					examinedPokemon = (r+length)<=Puzzle.size and Puzzle.tiles[r+length][c] or nil;
+				-- Step 2: check, if there are any similar pokemon below the current one
+				if r<Puzzle.size then -- skip last row
+					examinedPokemon = Puzzle.tiles[r+length][c];
 					loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
-				
-					if not loopContinues then 
-						-- when loop doesn't continue - line length is correct
-						local previousPL = verticalLines[#verticalLines];
 
-						if(previousPL) then
-							if(currentPokemon.column==previousPL.column and currentPokemon.row>=previousPL.row and currentPokemon.row<previousPL.row+previousPL.length) then
-								-- check, if current pokemon is in the line of the previous one
+					while loopContinues do
+						length = length + 1;
+						examinedPokemon = (r+length)<=Puzzle.size and Puzzle.tiles[r+length][c] or nil;
+						loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
+					
+						if not loopContinues then 
+							-- when loop doesn't continue - line length is correct
+							local previousPL = verticalLines[#verticalLines];
+
+							if(previousPL) then
+								if(currentPokemon.column==previousPL.column and currentPokemon.row>=previousPL.row and currentPokemon.row<previousPL.row+previousPL.length) then
+									-- check, if current pokemon is in the line of the previous one
+								else
+									-- if not - insert new line
+									verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length);
+								end
 							else
-								-- if not - insert new line
+								-- if there are no lines in the array - insert the first one
 								verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length);
 							end
-						else
-							-- if there are no lines in the array - insert the first one
-							verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length);
 						end
-					end
-					
-			    end
-			    length = 1;
+						
+				    end
+				    length = 1;
+				end
 			end
-
 		end
 	end
 
