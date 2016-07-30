@@ -35,8 +35,32 @@ function new(pokemonData)
 				Puzzle.tiles[Pokemon.row][Pokemon.column]:removeSelf( );
 				Puzzle.tiles[Pokemon.row][Pokemon.column] = nil;
 			end
+			timer.performWithDelay( 1, function() 
+				Puzzle:initFromQueue();
+			end ,1 )
+			
 		end });
 	end
+
+	Pokemon:addEventListener( "touch", function(event) 
+		if(event.phase=="began") then
+			if(Puzzle.onPokemonPressed) then 
+				Puzzle.onPokemonPressed(Pokemon); 
+			end
+			display.currentStage:setFocus( Pokemon );
+		elseif(event.phase=="moved") then
+			if(Puzzle.onPokemonDragged) then 
+				local overlappingPokemon = Puzzle:getOverlappingPokemon(event);
+				if not overlappingPokemon then overlappingPokemon=Pokemon end;
+				Puzzle.onPokemonDragged(Pokemon, overlappingPokemon); 
+			end
+		elseif(event.phase=="ended" or event.phase=="cancelled") then
+			if(Puzzle.onPokemonReleased) then
+				Puzzle.onPokemonReleased(Pokemon);
+			end
+			display.currentStage:setFocus( nil );
+		end
+	end );
 
 	return Pokemon;
 end

@@ -26,6 +26,7 @@ function Puzzle:init(size)
 		Puzzle.tiles[r] = {} 
 	end
 	Puzzle.removalQueue = {}; -- tiles that must be removed
+	Puzzle.insertionQueue = {}; -- tiles that must be inserted
 
 	for i=1,Puzzle.size^2 do
 		local emptyTile = display.newImage(Puzzle, TEXTURES_DIR.."tile-empty.png");
@@ -39,7 +40,7 @@ function Puzzle:init(size)
 	Puzzle.y = content.lowerEdge - Puzzle.height + Puzzle.tileSize/2;
 end
 
-local function getOverlappingPokemon(point)
+function Puzzle:getOverlappingPokemon(point)
 	local column = math.ceil(point.x/Puzzle.tileSize);
 	if(column>Puzzle.size or column<1) then return nil end
 
@@ -63,25 +64,7 @@ function Puzzle:fill()
 				pokemon.row = r;
 
 				-- add listeners
-				pokemon:addEventListener( "touch", function(event) 
-					if(event.phase=="began") then
-						if(Puzzle.onPokemonPressed) then 
-							Puzzle.onPokemonPressed(pokemon); 
-						end
-						display.currentStage:setFocus( pokemon );
-					elseif(event.phase=="moved") then
-						if(Puzzle.onPokemonDragged) then 
-							local overlappingPokemon = getOverlappingPokemon(event);
-							if not overlappingPokemon then overlappingPokemon=pokemon end;
-							Puzzle.onPokemonDragged(pokemon, overlappingPokemon); 
-						end
-					elseif(event.phase=="ended" or event.phase=="cancelled") then
-						if(Puzzle.onPokemonReleased) then
-							Puzzle.onPokemonReleased(pokemon);
-						end
-						display.currentStage:setFocus( nil );
-					end
-				end );
+				
 
 				Puzzle:insert( pokemon );
 				Puzzle.tiles[r][c] = pokemon;
@@ -94,13 +77,30 @@ local function cleanRemovalQueue()
 	if #Puzzle.removalQueue>=1 then
 		for i=1,#Puzzle.removalQueue do
 			local index = Puzzle.removalQueue[i];
-			if Puzzle.removalQueue[i] then
-				if(Puzzle.tiles[index.row][index.column]) then
-					Puzzle.tiles[index.row][index.column]:disappear();
-				end
+			if(Puzzle.tiles[index.row][index.column]) then
+				Puzzle.tiles[index.row][index.column]:disappear();
 			end
 		end
 		Puzzle.removalQueue = {};
+	end
+end
+
+function Puzzle:initFromQueue()
+	if #Puzzle.insertionQueue>=1 then
+		for i=1,#Puzzle.insertionQueue do
+			local insertion = Puzzle.insertionQueue[i];
+			print("INIT "..i.." "..insertion.row..";"..insertion.column);
+			local pokemon = m_Pokemon.new(insertion.data);
+			pokemon.column = insertion.column;
+			pokemon.row = insertion.row;
+			pokemon.x = (pokemon.column-1) * Puzzle.tileSize;
+			pokemon.y = (pokemon.row-1) * Puzzle.tileSize;
+
+			--Puzzle.tiles[pokemon.row][pokemon.column] = pokemon;
+			Puzzle:insert(pokemon);
+			Puzzle.tiles[pokemon.row][pokemon.column] = pokemon;
+		end
+		Puzzle.insertionQueue = {};
 	end
 end
 
@@ -146,6 +146,10 @@ local function evolve(pokemonLine)
 		local insertionRow = pokemonLine.row;
 		local insertionColumn = pokemonLine.column;
 
+		Puzzle.insertionQueue[#Puzzle.insertionQueue+1] = {};
+		Puzzle.insertionQueue[#Puzzle.insertionQueue].row = insertionRow;
+		Puzzle.insertionQueue[#Puzzle.insertionQueue].column = insertionColumn;
+		Puzzle.insertionQueue[#Puzzle.insertionQueue].data = evolutionData;
 	else
 		print("Pokemon is fully evolved");
 	end
@@ -167,7 +171,14 @@ local function evolve(pokemonLine)
 	end
 	
 	-- if swap has finished - clean tiles immediately
-	if not Puzzle.swapTransition then cleanRemovalQueue() end;
+	if not Puzzle.swapTransition then 
+		if #Puzzle.removalQueue>=1 then
+			cleanRemovalQueue();
+		else
+			-- if there are no tiles to disappear, init evolved pokemon
+			initFromQueue();
+		end
+	end;
 	-- else wait until swap transition finishes
 end
 
