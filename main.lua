@@ -13,7 +13,7 @@ Gameboard:show();
 Puzzle:init(6);
 
 local function checkEvolutions()
-	local pokemonInLine = Puzzle:getPokemonInLine();
+	local pokemonInLine = Puzzle:getPokemonInLine(3);
 
 	for i=1,#pokemonInLine do
 		local pokemonLine = pokemonInLine[i];

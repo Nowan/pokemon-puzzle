@@ -238,7 +238,7 @@ function Puzzle:getPokemonInLine(lengthFilter)
 						examinedPokemon = Puzzle.tiles[r][c+length];
 						loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
 					
-						if not loopContinues then 
+						if not loopContinues and length>=lengthFilter then 
 							-- when loop doesn't continue - line length is correct
 							local previousPL = horizontalLines[#horizontalLines];
 
@@ -269,7 +269,7 @@ function Puzzle:getPokemonInLine(lengthFilter)
 						examinedPokemon = (r+length)<=Puzzle.size and Puzzle.tiles[r+length][c] or nil;
 						loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
 					
-						if not loopContinues then 
+						if not loopContinues and length>=lengthFilter then 
 							-- when loop doesn't continue - line length is correct
 							local previousPL = verticalLines[#verticalLines];
 
