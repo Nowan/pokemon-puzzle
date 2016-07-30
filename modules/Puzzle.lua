@@ -124,14 +124,13 @@ function Puzzle:getPokemonInLine(lengthFilter)
 		pokemonLine.column = column;
 		pokemonLine.orientation = orientation;
 		pokemonLine.length = length;
-		
+
 		return pokemonLine;
 	end
 
 	for r=1,Puzzle.size do
 		for c=1,Puzzle.size do
-			print("CHECK ["..r..";"..c.."]")
-			
+
 			local length = 1;
 			local currentPokemon = Puzzle.tiles[r][c];
 			local examinedPokemon;
@@ -153,11 +152,8 @@ function Puzzle:getPokemonInLine(lengthFilter)
 						if(previousPL) then
 							if(currentPokemon.row==previousPL.row and currentPokemon.column>=previousPL.column and currentPokemon.column<previousPL.column+previousPL.length) then
 								-- check, if current pokemon is in the line of the previous one
-								-- if yes - update it's length
-								print("Continuation of line "..previousPL.row..";"..previousPL.column);
 							else
 								-- if not - insert new line
-								print("New line "..r..";"..c);
 								horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length);
 							end
 						else
@@ -178,7 +174,6 @@ function Puzzle:getPokemonInLine(lengthFilter)
 
 				while loopContinues do
 					length = length + 1;
-					print("R+LENGTH "..r..length);
 					examinedPokemon = (r+length)<=Puzzle.size and Puzzle.tiles[r+length][c] or nil;
 					loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
 				
@@ -189,16 +184,12 @@ function Puzzle:getPokemonInLine(lengthFilter)
 						if(previousPL) then
 							if(currentPokemon.column==previousPL.column and currentPokemon.row>=previousPL.row and currentPokemon.row<previousPL.row+previousPL.length) then
 								-- check, if current pokemon is in the line of the previous one
-								-- if yes - update it's length
-								print("Continuation of line "..previousPL.row..";"..previousPL.column);
 							else
 								-- if not - insert new line
-								print("New line "..r..";"..c);
 								verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length);
 							end
 						else
-							-- if there is no lines in the array - insert current one
-							print("New line "..r..";"..c);
+							-- if there are no lines in the array - insert the first one
 							verticalLines[#verticalLines+1] = newPokemonLine(r,c,"vertical",length);
 						end
 					end
