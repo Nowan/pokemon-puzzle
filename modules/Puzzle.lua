@@ -180,7 +180,6 @@ function Puzzle:getPokemonInLine(lengthFilter)
 								end
 							else
 								-- if there is no lines in the array - insert current one
-								print("New line "..r..";"..c);
 								horizontalLines[#horizontalLines+1] = newPokemonLine(r,c,"horizontal",length);
 							end
 						end

@@ -20,7 +20,6 @@ content.lowerEdge = content.height;
 TEXTURES_DIR = "textures/"
 POKEMON_PICTURES_DIR = "textures/pokemon/"
 POKEMON_DATA_PATH = system.pathForFile( "data/pokemon.json" );
-print(POKEMON_DATA_PATH);
 
 pokebase = json.decode( io.open( POKEMON_DATA_PATH, "r" ):read( "*a" ) );
 

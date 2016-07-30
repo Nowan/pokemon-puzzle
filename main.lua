@@ -36,7 +36,6 @@ Puzzle.onPokemonReleased = function(releasedPokemon)
 
 	for i=1,#pokemonInLine do
 		local pokemonLine = pokemonInLine[i];
-		print(pokemonLine.row,pokemonLine.column,pokemonLine.length,pokemonLine.orientation);
 		pokemonLine:evolve();
 	end
 

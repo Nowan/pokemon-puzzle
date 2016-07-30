@@ -6,8 +6,6 @@
 Gameboard = display.newGroup( );
 
 function Gameboard:show()
-	print("Show gameboard!");
-	
 	local skyBackground = display.newImage( Gameboard, TEXTURES_DIR.."sky.png" );
 	skyBackground.anchorY = 0;
 	skyBackground.x = content.centerX;
