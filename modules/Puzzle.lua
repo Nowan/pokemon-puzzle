@@ -21,11 +21,11 @@ function Puzzle:init(size)
 	-- constants
 	Puzzle.size = math.floor(size); -- grid size (number of rows/columns)
 	Puzzle.tileSize = content.width / Puzzle.size; -- tile size (pixels)
-
 	Puzzle.tiles = {}; -- tiles matrix
 	for r=1,Puzzle.size do 
 		Puzzle.tiles[r] = {} 
 	end
+	Puzzle.removalQueue = {}; -- tiles that must be removed
 
 	for i=1,Puzzle.size^2 do
 		local emptyTile = display.newImage(Puzzle, TEXTURES_DIR.."tile-empty.png");
@@ -90,8 +90,22 @@ function Puzzle:fill()
 	end
 end
 
+local function cleanRemovalQueue()
+	if #Puzzle.removalQueue>=1 then
+		for i=1,#Puzzle.removalQueue do
+			local index = Puzzle.removalQueue[i];
+			if Puzzle.removalQueue[i] then
+				if(Puzzle.tiles[index.row][index.column]) then
+					Puzzle.tiles[index.row][index.column]:disappear();
+				end
+			end
+		end
+		Puzzle.removalQueue = {};
+	end
+end
+
 function Puzzle:swap(firstPokemon,secondPokemon)
-	if Puzzle.swapTransition then return end;
+	if Puzzle.swapTransition or evolveTimer then return end;
 	local targetC = secondPokemon.column;
 	local targetR = secondPokemon.row;
 	firstPokemon:toFront( );
@@ -108,27 +122,61 @@ function Puzzle:swap(firstPokemon,secondPokemon)
 	Puzzle.swapTransition = transition.to(secondPokemon,{time=500, x=firstPokemon.x, y=firstPokemon.y, easing=easing.inOutQuint , onComplete=function()
 		transition.cancel( Puzzle.swapTransition );
 		Puzzle.swapTransition = nil;
+		
+		-- remove pokemons from Puzzle.removalQueue
+		if #Puzzle.removalQueue>=1 then
+			for i=1,#Puzzle.removalQueue do
+				local index = Puzzle.removalQueue[i];
+				if Puzzle.removalQueue[i] then
+					cleanRemovalQueue();
+				end
+			end
+			Puzzle.removalQueue = {};
+		end
 	end});
 end
 
 local function evolve(pokemonLine)
+	-- get evolution name
+	local evolutionName = Puzzle.tiles[pokemonLine.row][pokemonLine.column].data.evolution;
+	local pokemonName = Puzzle.tiles[pokemonLine.row][pokemonLine.column].data.name;
+	if evolutionName then
+		local evolutionData = pokebase[evolutionName];
+
+		local insertionRow = pokemonLine.row;
+		local insertionColumn = pokemonLine.column;
+
+	else
+		print("Pokemon is fully evolved");
+	end
+
 	if(pokemonLine.orientation=="horizontal") then
 		for i=0,pokemonLine.length-1 do
-			if Puzzle.tiles[pokemonLine.row][pokemonLine.column+i] then
-				Puzzle.tiles[pokemonLine.row][pokemonLine.column+i]:disappear();
-			end
+			local pokemonToRemove = Puzzle.tiles[pokemonLine.row][pokemonLine.column+i];
+			Puzzle.removalQueue[#Puzzle.removalQueue+1] = {};
+			Puzzle.removalQueue[#Puzzle.removalQueue].row = pokemonToRemove.row;
+			Puzzle.removalQueue[#Puzzle.removalQueue].column = pokemonToRemove.column;
 		end
 	elseif(pokemonLine.orientation=="vertical") then
 		for i=0,pokemonLine.length-1 do
-			if Puzzle.tiles[pokemonLine.row+i][pokemonLine.column] then
-				Puzzle.tiles[pokemonLine.row+i][pokemonLine.column]:disappear();
-			end
+			local pokemonToRemove = Puzzle.tiles[pokemonLine.row+i][pokemonLine.column];
+			Puzzle.removalQueue[#Puzzle.removalQueue+1] = {};
+			Puzzle.removalQueue[#Puzzle.removalQueue].row = pokemonToRemove.row;
+			Puzzle.removalQueue[#Puzzle.removalQueue].column = pokemonToRemove.column;
 		end
 	end
+	
+	-- if swap has finished - clean tiles immediately
+	if not Puzzle.swapTransition then cleanRemovalQueue() end;
+	-- else wait until swap transition finishes
 end
+
 
 function Puzzle:getPokemonInLine(lengthFilter)	
 	if not lengthFilter then lengthFilter=2 end;
+
+	-- clear removal queue
+	Puzzle.removalQueue = {};
 
 	local horizontalLines = {};
 	local verticalLines = {};
@@ -139,6 +187,8 @@ function Puzzle:getPokemonInLine(lengthFilter)
 		pokemonLine.column = column;
 		pokemonLine.orientation = orientation;
 		pokemonLine.length = length;
+		pokemonLine.middleRow = row+math.ceil(length/2);
+		pokemonLine.middleColumn = column+math.ceil(length/2);
 
 		function pokemonLine:evolve()
 			evolve(pokemonLine);
