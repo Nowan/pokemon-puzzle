@@ -12,7 +12,18 @@ Gameboard:show();
 
 Puzzle:init(6);
 
+local function checkEvolutions()
+	local pokemonInLine = Puzzle:getPokemonInLine();
+
+	for i=1,#pokemonInLine do
+		local pokemonLine = pokemonInLine[i];
+		print(pokemonLine.row,pokemonLine.column,pokemonLine.length,pokemonLine.orientation)
+		pokemonLine:evolve();
+	end
+end
+
 Puzzle:fill();
+checkEvolutions();
 
 Puzzle.onPokemonPressed = function(pressedPokemon)
 	pressedPokemon:shake();
@@ -30,14 +41,6 @@ Puzzle.onPokemonDragged = function(draggedPokemon, overlappingPokemon)
 	end
 end
 
-
 Puzzle.onPokemonReleased = function(releasedPokemon)
-	local pokemonInLine = Puzzle:getPokemonInLine();
-
-	for i=1,#pokemonInLine do
-		local pokemonLine = pokemonInLine[i];
-		print(pokemonLine.row,pokemonLine.column,pokemonLine.length,pokemonLine.orientation)
-		pokemonLine:evolve();
-	end
-
+	checkEvolutions();
 end

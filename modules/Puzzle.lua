@@ -28,6 +28,14 @@ function Puzzle:init(size)
 	Puzzle.removalQueue = {}; -- tiles that must be removed
 	Puzzle.insertionQueue = {}; -- tiles that must be inserted
 
+	-- listeners
+	Puzzle.onPokemonPressed = nil;
+	Puzzle.onPokemonDragged = nil;
+	Puzzle.onPokemonReleased = nil;
+	Puzzle.onPokemonEvolved = nil;
+	Puzzle.onEvolution = nil;
+	Puzzle.onFill = nil;
+
 	for i=1,Puzzle.size^2 do
 		local emptyTile = display.newImage(Puzzle, TEXTURES_DIR.."tile-empty.png");
 		emptyTile.width = Puzzle.tileSize;
@@ -65,11 +73,14 @@ function Puzzle:fill()
 
 				-- add listeners
 				
-
 				Puzzle:insert( pokemon );
 				Puzzle.tiles[r][c] = pokemon;
 			end
 		end
+	end
+
+	if Puzzle.onFill then 
+		timer.performWithDelay( 1, Puzzle.onFill(), 1 );
 	end
 end
 
@@ -82,6 +93,13 @@ local function cleanRemovalQueue()
 			end
 		end
 		Puzzle.removalQueue = {};
+		timer.performWithDelay( 510, function() 
+			Puzzle:initFromQueue();
+			timer.performWithDelay( 1, function() 
+				Puzzle:fill();
+			end );
+			
+		end ,1 )
 	end
 end
 
@@ -124,15 +142,7 @@ function Puzzle:swap(firstPokemon,secondPokemon)
 		Puzzle.swapTransition = nil;
 		
 		-- remove pokemons from Puzzle.removalQueue
-		if #Puzzle.removalQueue>=1 then
-			for i=1,#Puzzle.removalQueue do
-				local index = Puzzle.removalQueue[i];
-				if Puzzle.removalQueue[i] then
-					cleanRemovalQueue();
-				end
-			end
-			Puzzle.removalQueue = {};
-		end
+		cleanRemovalQueue();
 	end});
 end
 

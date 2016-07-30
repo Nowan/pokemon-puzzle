@@ -30,16 +30,19 @@ function new(pokemonData)
 	end
 
 	function Pokemon:disappear()
-		transition.to(Pokemon, {time=500,width=0,height=0,Easing=easing.inCubic ,onComplete=function()
+		transition.to(Pokemon, {time=500,alpha=0,width=0,height=0,Easing=easing.inCubic ,onComplete=function()
 			if Pokemon and Puzzle.tiles[Pokemon.row][Pokemon.column] then
 				Puzzle.tiles[Pokemon.row][Pokemon.column]:removeSelf( );
 				Puzzle.tiles[Pokemon.row][Pokemon.column] = nil;
 			end
-			timer.performWithDelay( 1, function() 
-				Puzzle:initFromQueue();
-			end ,1 )
-			
 		end });
+	end
+
+	function Pokemon:appear()
+		Pokemon.xScale = 0.2;
+		Pokemon.yScale = 0.2;
+		Pokemon.alpha = 0;
+		transition.to(Pokemon, {time=500,xScale=1,yScale=1, alpha=1, Easing=easing.outCubic});
 	end
 
 	Pokemon:addEventListener( "touch", function(event) 
@@ -61,6 +64,8 @@ function new(pokemonData)
 			display.currentStage:setFocus( nil );
 		end
 	end );
+
+	Pokemon:appear();
 
 	return Pokemon;
 end
