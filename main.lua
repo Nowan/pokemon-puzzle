@@ -18,7 +18,6 @@ Puzzle.onPokemonPressed = function(pressedPokemon)
 	pressedPokemon:shake();
 	originalRow = pressedPokemon.row;
 	originalColumn = pressedPokemon.column;
-	print(originalRow, originalColumn)
 end
 
 Puzzle.onPokemonDragged = function(draggedPokemon, overlappingPokemon)
@@ -31,6 +30,12 @@ Puzzle.onPokemonDragged = function(draggedPokemon, overlappingPokemon)
 	end
 end
 
-Puzzle.onPokemonReleased = function(releasedPokemon)
 
+Puzzle.onPokemonReleased = function(releasedPokemon)
+	local pokemonInLine = Puzzle:getPokemonInLine();
+	print(#pokemonInLine)
+	for i=1,#pokemonInLine do
+		local pokemonLine = pokemonInLine[i];
+		print(pokemonLine.row,pokemonLine.column,pokemonLine.length,pokemonLine.orientation);
+	end
 end

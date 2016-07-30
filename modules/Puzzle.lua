@@ -97,17 +97,81 @@ function Puzzle:swap(firstPokemon,secondPokemon)
 	local targetR = secondPokemon.row;
 	firstPokemon:toFront( );
 
+	secondPokemon.column = firstPokemon.column;
+	secondPokemon.row = firstPokemon.row;
+	firstPokemon.column = targetC;
+	firstPokemon.row = targetR;
+
+	Puzzle.tiles[secondPokemon.row][secondPokemon.column] = secondPokemon;
+	Puzzle.tiles[firstPokemon.row][firstPokemon.column] = firstPokemon;
+
 	transition.to(firstPokemon,{time=500, x=secondPokemon.x, y=secondPokemon.y, easing=easing.inOutQuint  });
 	swapTransition = transition.to(secondPokemon,{time=500, x=firstPokemon.x, y=firstPokemon.y, easing=easing.inOutQuint , onComplete=function()
-		secondPokemon.column = firstPokemon.column;
-		secondPokemon.row = firstPokemon.row;
-		firstPokemon.column = targetC;
-		firstPokemon.row = targetR;
-
-		Puzzle.tiles[secondPokemon.row][secondPokemon.column] = secondPokemon;
-		Puzzle.tiles[firstPokemon.row][firstPokemon.column] = firstPokemon;
-
 		transition.cancel( swapTransition );
 		swapTransition = nil;
 	end});
+end
+
+function Puzzle:getPokemonInLine(lengthFilter)	
+	if not lengthFilter then lengthFilter=2 end;
+
+	local pokemonInLine = {};
+
+	local function insertLine(row, column, orientation, length)
+		local pokemonLine = {};
+		pokemonLine.row = row;
+		pokemonLine.column = column;
+		pokemonLine.orientation = orientation;
+		pokemonLine.length = length;
+
+		pokemonInLine[#pokemonInLine+1] = pokemonLine;
+	end
+
+	for r=1,Puzzle.size do
+		for c=1,Puzzle.size do
+			print("CHECK ["..r..";"..c.."]")
+			
+			local length = 1;
+			local currentPokemon = Puzzle.tiles[r][c];
+			local examinedPokemon;
+
+			-- Step 1: check, if there are any similar pokemon on the right of the current one
+			if c<Puzzle.size then -- skip last column
+				examinedPokemon = Puzzle.tiles[r][c+length];
+				loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
+
+				while loopContinues do
+					length = length + 1;
+					examinedPokemon = Puzzle.tiles[r][c+length];
+					loopContinues = examinedPokemon and (examinedPokemon.data.name==currentPokemon.data.name);
+				
+					if not loopContinues then 
+						-- when loop doesn't continue - puzzle length
+						local previousPL = pokemonInLine[#pokemonInLine];
+
+						if(previousPL) then
+							if(currentPokemon.row==previousPL.row and currentPokemon.column>=previousPL.column and currentPokemon.column<previousPL.column+previousPL.length) then
+								-- check, if current pokemon is in the line of the previous one
+								-- if yes - update it's length
+								print("Continuation of line "..previousPL.row..";"..previousPL.column);
+							else
+								-- if not - insert new line
+								print("New line "..r..";"..c);
+								insertLine(r,c,"horizontal",length);
+							end
+						else
+							-- if there is no lines in the array - insert current one
+							print("New line "..r..";"..c);
+							insertLine(r,c,"horizontal",length);
+						end
+					end
+					
+			    end
+			    length = 1;
+			end
+
+		end
+	end
+
+	return pokemonInLine;
 end
