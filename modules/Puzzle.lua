@@ -40,15 +40,13 @@ function Puzzle:init(size)
 end
 
 local function getOverlappingPokemon(point)
-	local columnIndex = math.ceil(point.x/Puzzle.tileSize);
-	if(columnIndex>Puzzle.size or columnIndex<1) then return nil end
+	local column = math.ceil(point.x/Puzzle.tileSize);
+	if(column>Puzzle.size or column<1) then return nil end
 
-	local rowIndex = math.ceil((point.y-Puzzle.y+Puzzle.tileSize/2)/Puzzle.tileSize);
-	if(rowIndex>Puzzle.size or rowIndex<1) then return nil end
-	
-	print(rowIndex,columnIndex);
+	local row = math.ceil((point.y-Puzzle.y+Puzzle.tileSize/2)/Puzzle.tileSize);
+	if(row>Puzzle.size or row<1) then return nil end
 
-	return Puzzle.tiles[rowIndex][columnIndex];
+	return Puzzle.tiles[row][column];
 end
 
 function Puzzle:fill()
@@ -61,8 +59,8 @@ function Puzzle:fill()
 				pokemon.x = (c-1)*Puzzle.tileSize;
 				pokemon.y = (r-1)*Puzzle.tileSize;
 
-				pokemon.columnIndex = c;
-				pokemon.rowIndex = r;
+				pokemon.column = c;
+				pokemon.row = r;
 
 				-- add listeners
 				pokemon:addEventListener( "touch", function(event) 
@@ -95,19 +93,19 @@ end
 local swapTransition;
 function Puzzle:swap(firstPokemon,secondPokemon)
 	if swapTransition then return end;
-	local targetC = secondPokemon.columnIndex;
-	local targetR = secondPokemon.rowIndex;
+	local targetC = secondPokemon.column;
+	local targetR = secondPokemon.row;
 	firstPokemon:toFront( );
 
 	transition.to(firstPokemon,{time=500, x=secondPokemon.x, y=secondPokemon.y, easing=easing.inOutQuint  });
 	swapTransition = transition.to(secondPokemon,{time=500, x=firstPokemon.x, y=firstPokemon.y, easing=easing.inOutQuint , onComplete=function()
-		secondPokemon.columnIndex = firstPokemon.columnIndex;
-		secondPokemon.rowIndex = firstPokemon.rowIndex;
-		firstPokemon.columnIndex = targetC;
-		firstPokemon.rowIndex = targetR;
+		secondPokemon.column = firstPokemon.column;
+		secondPokemon.row = firstPokemon.row;
+		firstPokemon.column = targetC;
+		firstPokemon.row = targetR;
 
-		Puzzle.tiles[secondPokemon.rowIndex][secondPokemon.columnIndex] = secondPokemon;
-		Puzzle.tiles[firstPokemon.rowIndex][firstPokemon.columnIndex] = firstPokemon;
+		Puzzle.tiles[secondPokemon.row][secondPokemon.column] = secondPokemon;
+		Puzzle.tiles[firstPokemon.row][firstPokemon.column] = firstPokemon;
 
 		transition.cancel( swapTransition );
 		swapTransition = nil;

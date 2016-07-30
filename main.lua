@@ -16,12 +16,18 @@ Puzzle:fill();
 
 Puzzle.onPokemonPressed = function(pressedPokemon)
 	pressedPokemon:shake();
+	originalRow = pressedPokemon.row;
+	originalColumn = pressedPokemon.column;
+	print(originalRow, originalColumn)
 end
 
 Puzzle.onPokemonDragged = function(draggedPokemon, overlappingPokemon)
-	if draggedPokemon.columnIndex ~= overlappingPokemon.columnIndex or 
-	   draggedPokemon.rowIndex ~= overlappingPokemon.rowIndex then
-		Puzzle:swap(draggedPokemon,overlappingPokemon);
+	if draggedPokemon ~= overlappingPokemon then
+		if (overlappingPokemon.row==originalRow and originalColumn-overlappingPokemon.column<=1 and originalColumn-overlappingPokemon.column>=-1)
+		or (overlappingPokemon.column==originalColumn and originalRow-overlappingPokemon.row<=1 and originalRow-overlappingPokemon.row>=-1)
+		then
+			Puzzle:swap(draggedPokemon,overlappingPokemon);
+		end
 	end
 end
 
