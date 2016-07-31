@@ -49,5 +49,90 @@
     "name": "blastoise",
     "type": [ "water" ],
     "stage": 3
-  }
+  },
+  /*{
+    "name": "rattata",
+    "type": [ "normal" ],
+    "evolution": "raticate",
+    "stage": 1
+  },
+  {
+    "name": "raticate",
+    "type": [ "normal" ],
+    "stage": 2
+  },
+  {
+    "name": "spearow",
+    "type": [ "normal", "flying" ],
+    "evolution": "fearow",
+    "stage": 1
+  },
+  {
+    "name": "fearow",
+    "type": [ "normal", "flying" ],
+    "stage": 2
+  },*/
+  {
+    "name": "pidgey",
+    "type": [ "normal", "flying" ],
+    "evolution": "pidgeotto",
+    "stage": 1
+  },
+  {
+    "name": "pidgeotto",
+    "type": [ "normal", "flying" ],
+    "evolution": "pidgeot",
+    "stage": 2
+  },
+  {
+    "name": "pidgeot",
+    "type": [ "normal", "flying" ],
+    "stage": 3
+  },
+  {
+    "name": "pichu",
+    "type": [ "electric" ],
+    "evolution": "pikachu",
+    "stage": 1
+  },
+  {
+    "name": "pikachu",
+    "type": [ "electric" ],
+    "evolution": "raichu",
+    "stage": 2
+  },
+  {
+    "name": "raichu",
+    "type": [ "electric" ],
+    "stage": 3
+  },
+  {
+    "name": "oddish",
+    "type": [ "grass","poison" ],
+    "evolution": "gloom",
+    "stage": 1
+  },
+  {
+    "name": "gloom",
+    "type": [ "grass","poison" ],
+    "evolution": "vileplume",
+    "stage": 2
+  },
+  {
+    "name": "vileplume",
+    "type": [ "grass", "poison" ],
+    "stage": 3
+  },
+  {
+    "name": "growlithe",
+    "type": [ "fire" ],
+    "evolution": "arcanine",
+    "stage": 1
+  },
+  {
+    "name": "arcanine",
+    "type": [ "fire" ],
+    "stage": 2
+  },
+
 ]
