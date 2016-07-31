@@ -35,6 +35,7 @@ Puzzle:fill();
 Puzzle.onPokemonPressed = function(pressedPokemon)
 	pressedPokemon:shake();
 	pressedPokemon:enspell();
+	Audio:playEffectSound(pressedPokemon.type);
 	originalRow = pressedPokemon.row;
 	originalColumn = pressedPokemon.column;
 end

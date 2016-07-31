@@ -9,6 +9,7 @@ function new(pokemonData)
 	local Pokemon = display.newGroup( );
 
 	Pokemon.data = pokemonData;
+	Pokemon.type = pokemonData.type[1];
 
 	local emitter = m_Emitter.new(pokemonData.type[1]);
 	emitter.absolutePosition = true;
